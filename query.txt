@@ -1,0 +1,81 @@
+1. Selezionare nome e cognome di tutti gli insegnanti
+
+SELECT `name`, `surname`
+FROM `teachers`;
+
+2. Selezionare gli insegnanti che si chiamano Noemi
+
+SELECT *
+FROM `teachers`
+WHERE `name` = "Noemi";
+
+3. Tutti gli insegnanti con nome "Diamante" e numero ufficcio > 40
+
+SELECT *
+FROM `teachers`
+WHERE `name` = "Diamante" 
+AND `office_number` > 40;
+
+4. Selezionare tutti i referenti per ogni dipartimento
+
+SELECT `name`, `head_of_department`
+FROM `departments`;
+
+5. Selezionare tutti gli studenti il cui nome inizia per "E"
+
+SELECT * 
+FROM `students`
+WHERE `name` LIKE "E%";
+
+6. Selezionare tutti gli studenti che si sono iscritti nel 2021
+
+SELECT *
+FROM `students`
+WHERE YEAR(`enrolment_date`) = 2021;
+
+SELECT *
+FROM `students`
+WHERE `enrolment_date` LIKE "2021-%";
+
+SELECT *
+FROM `students`
+WHERE `enrolment_date` 
+BETWEEN "2021-01-01"
+AND "2021-12-31";
+
+
+7. Selezionare tutti i corsi che non hanno un sito web (676)
+
+SELECT * 
+FROM `courses`
+WHERE `courses`.`website` IS NULL;
+
+8. Selezionare tutti gli insegnanti che hanno un numero di telefono (50)
+
+SELECT *
+FROM `teachers`
+WHERE `teachers`.`phone` IS NOT NULL;
+
+9. Selezionare tutti gli appelli d'esame dei mesi di giugno e luglio 2020
+
+SELECT *
+FROM `exams`
+WHERE `date` BETWEEN "2020-06-01" AND "2020-07-31"
+ORDER BY `date`;
+
+SELECT *
+FROM `exams`
+WHERE `date` LIKE "2020-06-%" 
+OR `date` LIKE "2020-07-%"
+ORDER BY `date`;
+
+SELECT *
+FROM `exams`
+WHERE YEAR(`date`) = 2020
+AND MONTH(`date`) = 6
+OR MONTH(`date`) = 7;
+
+10. Qual è il numero totale degli studenti iscritti? (5000)
+
+SELECT COUNT(*) AS `students_number`
+FROM `students`;
