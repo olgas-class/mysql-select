@@ -1,0 +1,133 @@
+1. Studenti con i dati degli esami fatti e nomi dei corsi
+
+SELECT *
+FROM `students`
+INNER JOIN `exam_student`
+ON `students`.`id` = `exam_student`.`student_id`
+INNER JOIN `exams`
+ON `exam_student`.`exam_id` = `exams`.`id`
+INNER JOIN `courses`
+ON `exams`.`course_id` = `courses`.`id`
+ORDER BY `students`.`id`;
+
+2. Partendo da ogni corso prendiamo per ogni corso le info del relativo degree e department
+
+SELECT `courses`.`id`, `courses`.`name`, `degrees`.`name` AS `degree_name`, `departments`.`name` AS `department_name`
+FROM `courses`
+INNER JOIN `degrees`
+ON `courses`.`degree_id` = `degrees`.`id`
+INNER JOIN `departments`
+ON `degrees`.`department_id` = `departments`.`id`
+
+Aggiungo solo quei corsi del dipartimento ha il nome di ingegneria dell'informazione.
+
+SELECT `courses`.`id`, `courses`.`name`, `degrees`.`name` AS `degree_name`, `departments`.`name` AS `department_name`
+FROM `courses`
+INNER JOIN `degrees`
+ON `courses`.`degree_id` = `degrees`.`id`
+INNER JOIN `departments`
+ON `degrees`.`department_id` = `departments`.`id`
+WHERE `departments`.`name` = "Dipartimento di Ingegneria dell'informazione"
+
+Raggrupppare per livello e controllare le quantità
+SELECT COUNT(*) AS `courses_number`, `degrees`.`level`, `degrees`.`name`
+FROM `courses`
+INNER JOIN `degrees`
+ON `courses`.`degree_id` = `degrees`.`id`
+GROUP BY `degrees`.`level`, `degrees`.`name`
+
+3. Selezionare tutti i corsi del Corso di Laurea in Informatica (22)
+
+SELECT `courses`.`id`, `courses`.`name`, `degrees`.`name` AS `degree_name`
+FROM `courses`
+INNER JOIN `degrees`
+ON `courses`.`degree_id` = `degrees`.`id`
+WHERE `degrees`.`name` = "Corso di Laurea in Ingegneria Informatica"
+
+4. Selezionare le informazioni sul corso con id = 144, con tutti i relativi appelli d’esame
+
+SELECT *
+FROM `courses`
+INNER JOIN `exams`
+ON `courses`.`id` = `exams`.`course_id`
+WHERE `courses`.`id` = 144
+
+5. Selezionare a quale dipartimento appartiene il Corso di Laurea in Diritto dell'Economia (Dipartimento di Scienze politiche, giuridiche e studi internazionali)
+
+SELECT `degrees`.`id`, `degrees`.`name`, `departments`.`name` AS `department_name`
+FROM `degrees`
+INNER JOIN `departments`
+ON `degrees`.`department_id` = `departments`.`id`
+WHERE `degrees`.`name` = "Corso di Laurea in Diritto dell'Economia"
+
+6. Selezionare tutti gli appelli d'esame del Corso di Laurea Magistrale in Fisica del primo anno
+
+Corso di Laurea | livello | anno | corso | data | ora | 
+
+SELECT `exams`.`id`, `exams`.`date`, `courses`.`name`, `courses`.`year`, `degrees`.`name`
+FROM `exams`
+INNER JOIN `courses`
+ON `exams`.`course_id` = `courses`.`id`
+INNER JOIN `degrees`
+ON `courses`.`degree_id` = `degrees`.`id`
+WHERE `degrees`.`name` = "Corso di Laurea Magistrale in Fisica"
+AND `courses`.`year` = 1
+
+7. Selezionare tutti i docenti che insegnano nel Corso di Laurea in Lettere (21)
+
+SELECT *
+FROM `teachers`
+INNER JOIN `course_teacher`
+ON `teachers`.`id` = `course_teacher`.`teacher_id`
+INNER JOIN `courses`
+ON `course_teacher`.`course_id` = `courses`.`id`
+INNER JOIN `degrees`
+ON `courses`.`degree_id` = `degrees`.`id`
+WHERE `degrees`.`name` = 'Corso di Laurea in Lettere'
+
+
+8. Selezionare il libretto universitario di Mirco Messina (matricola n. 620320)
+
+materia | data | voto
+
+SELECT `courses`.`name`, `exams`.`date`, `exam_student`.`vote`
+FROM `students`
+INNER JOIN `exam_student`
+ON `students`.`id` = `exam_student`.`student_id`
+INNER JOIN `exams`
+ON `exam_student`.`exam_id` = `exams`.`id`
+INNER JOIN `courses`
+ON `exams`.`course_id` = `courses`.`id`
+WHERE `students`.`registration_number` = "620320"
+AND `exam_student`.`vote` >= 18
+ORDER BY `exams`.`date`
+
+9. Selezionare il voto medio di superamento d'esame per ogni corso, con anche i dati del corso di laurea associato, ordinati per media voto decrescente
+
+SELECT AVG(`exam_student`.`vote`) as `media_voto`, `exams`.`course_id`, `courses`.`name` AS `course_name`, `degrees`.*
+FROM `exam_student`
+INNER JOIN `exams`
+ON `exam_student`.`exam_id` = `exams`.`id`
+INNER JOIN `courses`
+ON `exams`.`course_id` = `courses`.`id`
+INNER JOIN `degrees`
+ON `courses`.`degree_id` = `degrees`.`id`
+WHERE `exam_student`.`vote` >= 18
+GROUP BY `exams`.`course_id`
+ORDER BY `media_voto` DESC;
+
+10. Seleziono tutti gli studenti che non hanno effettuato nessun esame
+
+SELECT *
+FROM `students`
+LEFT JOIN `exam_student`
+ON `students`.`id` = `exam_student`.`student_id`
+WHERE `exam_student`.`exam_id` IS NULL
+
+11. Prendiamo tutti gli esami alle quali non ha partecipato alcun studente
+
+SELECT * 
+FROM `exams`
+LEFT JOIN `exam_student`
+ON `exams`.`id` = `exam_student`.`exam_id`
+WHERE `exam_student`.`student_id` IS NULL;

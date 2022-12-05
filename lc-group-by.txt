@@ -1,0 +1,32 @@
+1. Contare i corsi raggruppati per cfu
+
+SELECT COUNT(`id`) as `courses_number`, `cfu`
+FROM `courses`
+GROUP BY `cfu`;
+
+1.1. Mostrare i cfu con il numero corsi, dove laquantità di corsi è maggiore di 100 
+
+2. Contare gli studenti raggruppati per anno di nascita
+
+SELECT YEAR(`students`.`date_of_birth`) AS `year_of_birth`, COUNT(`id`) AS `students_number`
+FROM `students`
+GROUP BY `year_of_birth`;
+
+3. Selezionare il voto più basso dato ad ogni appello d'esame
+
+exam_id | min_vote
+1           12
+2           21 
+
+SELECT `exam_student`.`exam_id` AS `exam`, MIN(`exam_student`.`vote`) as `min_vote`
+FROM `exam_student`
+GROUP BY `exam`;
+
+4. Contare gli appelli d'esame del mese di luglio raggruppati per giorno
+
+num_exams | day |
+
+SELECT COUNT(`id`) AS `exams_number`, DAY(`date`) as `exam_day`
+FROM `exams`
+WHERE MONTH(`date`) = 7
+GROUP BY  `exam_day`;
